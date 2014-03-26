@@ -1,33 +1,12 @@
 package hash.table;
 
-import java.util.ArrayList;
-
-import pairs.Pair;
-
-public class SeparateChainingHashTable<K, V> implements HashTable<K, V> {
-
-	private ArrayList<Pair<K, V>>[] map;
-	private int size;
-
-	@SuppressWarnings("unchecked")
-	public SeparateChainingHashTable() {
-		size = 100;
-		map = new ArrayList[size];
-
-		for (int i = 0; i < size; i++) {
-			map[i] = new ArrayList<Pair<K, V>>();
-		}
-	}
-
+public class LinearProbingHashTable<K, V> implements HashTable<K, V> {
+	
 	// put key­value pair into the table
 
 	@Override
 	public void put(K key, V value) {
-		Pair<K, V> pair = new Pair<K, V>(key, value);
-		int hashCode = HashFunction.getHashCode(pair, size);
-		if (map[hashCode].contains(pair)) {
-			
-		}
+
 	}
 
 	// get value paired with key, return null if
@@ -72,7 +51,7 @@ public class SeparateChainingHashTable<K, V> implements HashTable<K, V> {
 	}
 
 	// all keys in the table
-
+	
 	@Override
 	public Iterable<K> keys() {
 		return null;

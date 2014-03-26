@@ -1,4 +1,4 @@
-package hash.table;
+package pairs;
 
 public class Pair<K, V> {
 	private K key;
@@ -12,6 +12,13 @@ public class Pair<K, V> {
 	@Override
 	public int hashCode() {
 		return key.hashCode();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean equals(Object o) {
+
+		return key == ((Pair<K, V>) o).getKey();
 	}
 
 	// ---------------------------------------------
