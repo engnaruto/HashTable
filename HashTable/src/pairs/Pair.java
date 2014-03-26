@@ -17,8 +17,11 @@ public class Pair<K, V> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean equals(Object o) {
-
-		return key == ((Pair<K, V>) o).getKey();
+		if (o instanceof Pair<?, ?>) {
+			Pair<K, V> pair = (Pair<K, V>) o;
+			return key.equals(pair.getKey());
+		}
+		return false;
 	}
 
 	// ---------------------------------------------

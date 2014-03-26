@@ -6,7 +6,7 @@ public interface HashTable<K, V> {
 
 	// get value paired with key, return null if
 	// hash don't contain key
-	public String get(K key);
+	public V get(K key);
 
 	// remove key (and its value) from table
 	public void delete(K key);

@@ -13,7 +13,7 @@ public class QuadraticProbingHashTable<K, V> implements HashTable<K, V> {
 	// hash don't contain key
 
 	@Override
-	public String get(K key) {
+	public V get(K key) {
 
 		return null;
 	}

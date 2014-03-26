@@ -1,7 +1,25 @@
 package hash.table;
 
+import java.util.ArrayList;
+
+import pairs.Pair;
+
 public class BucketingHashTable<K, V> implements HashTable<K, V> {
-	
+	private Pair<K, V> map[];
+	private ArrayList<Pair<K, V>> overflow;
+	private int mapLength;
+	private int size;
+	private int bucketSize;
+
+	@SuppressWarnings("unchecked")
+	public BucketingHashTable() {
+		mapLength = 50;
+		size = 0;
+		map = new Pair[mapLength];
+		overflow = new ArrayList<Pair<K, V>>();
+		bucketSize = 5;
+	}
+
 	// put key­value pair into the table
 
 	@Override
@@ -13,7 +31,7 @@ public class BucketingHashTable<K, V> implements HashTable<K, V> {
 	// hash don't contain key
 
 	@Override
-	public String get(K key) {
+	public V get(K key) {
 
 		return null;
 	}
@@ -51,7 +69,7 @@ public class BucketingHashTable<K, V> implements HashTable<K, V> {
 	}
 
 	// all keys in the table
-	
+
 	@Override
 	public Iterable<K> keys() {
 		return null;
