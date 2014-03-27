@@ -26,7 +26,7 @@ public class SeparateChainingHashTable<K, V> implements HashTable<K, V> {
 	@Override
 	public void put(K key, V value) {
 		Pair<K, V> pair = new Pair<K, V>(key, value);
-		int mapIndex = HashFunction.getHashCode(pair, mapLength);
+		int mapIndex = getHashCode(pair);
 		if (map[mapIndex].contains(pair)) {
 			int index = map[mapIndex].indexOf(pair);
 			map[mapIndex].get(index).setValue(value);
@@ -42,7 +42,7 @@ public class SeparateChainingHashTable<K, V> implements HashTable<K, V> {
 	@Override
 	public V get(K key) {
 		Pair<K, V> pair = new Pair<K, V>(key, null);
-		int mapIndex = HashFunction.getHashCode(pair, mapLength);
+		int mapIndex = getHashCode(pair);
 		if (map[mapIndex].contains(pair)) {
 			int index = map[mapIndex].indexOf(pair);
 			return map[mapIndex].get(index).getValue();
@@ -55,7 +55,7 @@ public class SeparateChainingHashTable<K, V> implements HashTable<K, V> {
 	@Override
 	public void delete(K key) {
 		Pair<K, V> pair = new Pair<K, V>(key, null);
-		int mapIndex = HashFunction.getHashCode(pair, mapLength);
+		int mapIndex = getHashCode(pair);
 		if (map[mapIndex].contains(pair)) {
 			map[mapIndex].remove(pair);
 			size--;
@@ -68,7 +68,7 @@ public class SeparateChainingHashTable<K, V> implements HashTable<K, V> {
 	@Override
 	public boolean contains(K key) {
 		Pair<K, V> pair = new Pair<K, V>(key, null);
-		int mapIndex = HashFunction.getHashCode(pair, mapLength);
+		int mapIndex = getHashCode(pair);
 		return map[mapIndex].contains(pair);
 	}
 
@@ -98,5 +98,9 @@ public class SeparateChainingHashTable<K, V> implements HashTable<K, V> {
 			}
 		}
 		return keys;
+	}
+
+	private int getHashCode(Pair<?, ?> pair) {
+		return pair.hashCode() % mapLength;
 	}
 }
