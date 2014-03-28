@@ -16,13 +16,39 @@ public class LinearProbingHashTable<K, V> implements HashTable<K, V> {
 		map = new PairB[mapLength];
 	}
 
+	@SuppressWarnings("unchecked")
+	private LinearProbingHashTable(int mapLength) {
+		this.mapLength = mapLength;
+		size = 0;
+		map = new PairB[mapLength];
+	}
+
+	private void rehash() {
+		Iterable<K> keys = keys();
+		LinearProbingHashTable<K, V> temp = new LinearProbingHashTable<K, V>(
+				mapLength * 2);
+		for (K key : keys) {
+			V value = get(key);
+			temp.put(key, value);
+		}
+		map = temp.map;
+		size = temp.size;
+		mapLength = temp.mapLength;
+		System.out.println("Rehashing : Size = " + size + " mapLength = "
+				+ mapLength);
+//		keys = keys();
+	}
+
 	// put key­value pair into the table
 
 	@Override
 	public void put(K key, V value) {
+		double loadFactor = (double) size / (double) mapLength;
+		if (loadFactor >= .75) {
+			rehash();
+		}
 		PairB<K, V> pair = new PairB<K, V>(key, value);
 		int home = getHashCode(pair);
-
 		for (int i = 0; i < mapLength; i++) {
 			int index = getNextProbe(home, i);
 			if (map[index] == null) {
@@ -42,7 +68,7 @@ public class LinearProbingHashTable<K, V> implements HashTable<K, V> {
 				return;
 			}
 		}
-		System.out.println("HashTable is Full!!!");
+//		System.out.println("HashTable is Full!!!");
 	}
 
 	// get value paired with key, return null if

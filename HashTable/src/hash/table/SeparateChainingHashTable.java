@@ -7,6 +7,7 @@ import pairs.Pair;
 public class SeparateChainingHashTable<K, V> implements HashTable<K, V> {
 
 	private ArrayList<Pair<K, V>>[] map;
+	// private ArrayList<Pair<K, V>>[] tempMap;
 	private int mapLength;
 	private int size;
 
@@ -16,6 +17,16 @@ public class SeparateChainingHashTable<K, V> implements HashTable<K, V> {
 		size = 0;
 		map = new ArrayList[mapLength];
 
+		for (int i = 0; i < mapLength; i++) {
+			map[i] = new ArrayList<Pair<K, V>>();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private SeparateChainingHashTable(int mapLength) {
+		this.mapLength = mapLength;
+		size = 0;
+		map = new ArrayList[mapLength];
 		for (int i = 0; i < mapLength; i++) {
 			map[i] = new ArrayList<Pair<K, V>>();
 		}
@@ -33,12 +44,31 @@ public class SeparateChainingHashTable<K, V> implements HashTable<K, V> {
 		} else {
 			map[mapIndex].add(pair);
 			size++;
+			double loadFactor = (double) size / (double) mapLength;
+			if (loadFactor >= 3) {
+				rehash();
+			}
 		}
+	}
+
+	private void rehash() {
+		Iterable<K> keys = keys();
+		SeparateChainingHashTable<K, V> temp = new SeparateChainingHashTable<K, V>(
+				mapLength * 2);
+		for (K key : keys) {
+			V value = get(key);
+			temp.put(key, value);
+		}
+		map = temp.map;
+		size = temp.size;
+		mapLength = temp.mapLength;
+		System.out.println("Rehashing : Size = " + size + " mapLength = "
+				+ mapLength);
+		keys = keys();
 	}
 
 	// get value paired with key, return null if
 	// hash don't contain key
-
 	@Override
 	public V get(K key) {
 		Pair<K, V> pair = new Pair<K, V>(key, null);
@@ -93,6 +123,7 @@ public class SeparateChainingHashTable<K, V> implements HashTable<K, V> {
 		ArrayList<K> keys = new ArrayList<K>();
 
 		for (int i = 0; i < mapLength; i++) {
+			// System.out.println(i + " " + map[i].size());
 			for (int j = 0; j < map[i].size(); j++) {
 				keys.add(map[i].get(j).getKey());
 			}
@@ -103,4 +134,8 @@ public class SeparateChainingHashTable<K, V> implements HashTable<K, V> {
 	private int getHashCode(Pair<?, ?> pair) {
 		return pair.hashCode() % mapLength;
 	}
+
+	// private int getNewHashCode(Pair<?, ?> pair) {
+	// return pair.hashCode() % mapLength * 2;
+	// }
 }

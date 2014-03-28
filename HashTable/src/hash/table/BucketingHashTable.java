@@ -24,10 +24,45 @@ public class BucketingHashTable<K, V> implements HashTable<K, V> {
 		buckets = new int[numOfBuckets];
 	}
 
+	@SuppressWarnings("unchecked")
+	private BucketingHashTable(int mapLength) {
+		this.mapLength = mapLength;
+		size = 0;
+		map = new PairB[mapLength];
+		overflow = new ArrayList<PairB<K, V>>();
+		bucketSize = 5;
+		numOfBuckets = mapLength / bucketSize;
+		buckets = new int[numOfBuckets];
+	}
+
+	private void rehash() {
+		Iterable<K> keys = keys();
+		BucketingHashTable<K, V> temp = new BucketingHashTable<K, V>(
+				mapLength * 2);
+		for (K key : keys) {
+			V value = get(key);
+			temp.put(key, value);
+		}
+		map = temp.map;
+		overflow = temp.overflow;
+		buckets = temp.buckets;
+		mapLength = temp.mapLength;
+		size = temp.size;
+		bucketSize = temp.bucketSize;
+		numOfBuckets = temp.numOfBuckets;
+		System.out.println("Rehashing : Size = " + size + " mapLength = "
+				+ mapLength);
+//		keys = keys();
+	}
+
 	// put key­value pair into the table
 
 	@Override
 	public void put(K key, V value) {
+		double loadFactor = (double) size / (double) mapLength;
+		if (loadFactor >= .75) {
+			rehash();
+		}
 		PairB<K, V> pair = new PairB<K, V>(key, value);
 		int mapIndex = getHashCode(pair);
 		if (buckets[mapIndex] == bucketSize) {

@@ -13,7 +13,7 @@ public class PairB<K, V> {
 
 	@Override
 	public int hashCode() {
-		return key.hashCode();
+		return Math.abs(key.hashCode());
 	}
 
 	@SuppressWarnings("unchecked")

@@ -16,10 +16,37 @@ public class DoubleHashingHashTable<K, V> implements HashTable<K, V> {
 		map = new PairB[mapLength];
 	}
 
+	@SuppressWarnings("unchecked")
+	private DoubleHashingHashTable(int mapLength) {
+		this.mapLength = mapLength;
+		size = 0;
+		map = new PairB[mapLength];
+	}
+
+	private void rehash() {
+		Iterable<K> keys = keys();
+		DoubleHashingHashTable<K, V> temp = new DoubleHashingHashTable<K, V>(
+				mapLength * 2);
+		for (K key : keys) {
+			V value = get(key);
+			temp.put(key, value);
+		}
+		map = temp.map;
+		size = temp.size;
+		mapLength = temp.mapLength;
+		System.out.println("Rehashing : Size = " + size + " mapLength = "
+				+ mapLength);
+		// keys = keys();
+	}
+
 	// put key­value pair into the table
 
 	@Override
 	public void put(K key, V value) {
+		double loadFactor = (double) size / (double) mapLength;
+		if (loadFactor >= .75) {
+			rehash();
+		}
 		PairB<K, V> pair = new PairB<K, V>(key, value);
 		int home = getHashCode(pair);
 

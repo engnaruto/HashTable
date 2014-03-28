@@ -1,0 +1,22 @@
+// private void putTemp(K key, V value) {
+	// Pair<K, V> pair = new Pair<K, V>(key, value);
+	// int mapIndex = getNewHashCode(pair);
+	// if (tempMap[mapIndex].contains(pair)) {
+	// int index = tempMap[mapIndex].indexOf(pair);
+	// tempMap[mapIndex].get(index).setValue(value);
+	// } else {
+	// tempMap[mapIndex].add(pair);
+	// size++;
+	// }
+	// }
+	
+	
+		// size = 0;
+		// tempMap = new ArrayList[mapLength * 2];
+		// for (int i = 0; i < mapLength * 2; i++) {
+		// tempMap[i] = new ArrayList<Pair<K, V>>();
+		// }
+		
+		// mapLength *= 2;
+		// map = tempMap;
+		// tempMap = null;
