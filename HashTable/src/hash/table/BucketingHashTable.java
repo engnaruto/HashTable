@@ -42,6 +42,14 @@ public class BucketingHashTable<K, V> implements HashTable<K, V> {
 				int index = overflow.indexOf(pair);
 				overflow.set(index, pair);
 			} else {
+				for (int i = mapIndex * bucketSize; i < mapIndex * bucketSize
+						+ buckets[mapIndex]; i++) {
+					if (map[i] == null || map[i].isDeleted()) {
+						map[i] = pair;
+						size++;
+						return;
+					}
+				}
 				overflow.add(pair);
 				size++;
 			}
@@ -90,7 +98,7 @@ public class BucketingHashTable<K, V> implements HashTable<K, V> {
 			}
 			if (overflow.contains(pair)) {
 				index = overflow.indexOf(pair);
-				if (!map[index].isDeleted()) {
+				if (!overflow.get(index).isDeleted()) {
 					return overflow.get(index).getValue();
 				}
 			}
@@ -124,12 +132,9 @@ public class BucketingHashTable<K, V> implements HashTable<K, V> {
 				}
 			}
 			if (overflow.contains(pair)) {
-				index = overflow.indexOf(pair);
-				if (!map[index].isDeleted()) {
-					map[index].setDeleted(true);
-					size--;
-					return;
-				}
+				overflow.remove(pair);
+				size--;
+				return;
 			}
 		}
 	}
@@ -144,9 +149,11 @@ public class BucketingHashTable<K, V> implements HashTable<K, V> {
 		if (buckets[index] != bucketSize) {
 			for (int i = index * bucketSize; i < index * bucketSize
 					+ buckets[index]; i++) {
+
 				if (map[i].equals(pair) && !map[i].isDeleted()) {
 					return true;
 				}
+
 			}
 
 		} else {
@@ -158,9 +165,7 @@ public class BucketingHashTable<K, V> implements HashTable<K, V> {
 			}
 			if (overflow.contains(pair)) {
 				index = overflow.indexOf(pair);
-				if (!map[index].isDeleted()) {
-					return true;
-				}
+				return !overflow.get(index).isDeleted();
 			}
 		}
 		return false;
@@ -170,7 +175,6 @@ public class BucketingHashTable<K, V> implements HashTable<K, V> {
 
 	@Override
 	public boolean isEmpty() {
-
 		return size != 0;
 	}
 
@@ -178,7 +182,6 @@ public class BucketingHashTable<K, V> implements HashTable<K, V> {
 
 	@Override
 	public int size() {
-
 		return size;
 	}
 
@@ -201,7 +204,7 @@ public class BucketingHashTable<K, V> implements HashTable<K, V> {
 		return keys;
 	}
 
-	private int getHashCode(PairB<?, ?> pair) {
+	private int getHashCode(PairB<K, V> pair) {
 		return pair.hashCode() % numOfBuckets;
 	}
 }

@@ -16,6 +16,18 @@ public class PairB<K, V> {
 		return key.hashCode();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean equals(Object o) {
+		PairB<K, V> pair = (PairB<K, V>) o;
+		return key.equals(pair.getKey());
+	}
+
+	@Override
+	public String toString() {
+		return key + " = " + value;
+	}
+
 	// ---------------------------------------------
 
 	public K getKey() {
