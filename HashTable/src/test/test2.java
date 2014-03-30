@@ -1,7 +1,6 @@
 package test;
 
 import hash.table.BucketingHashTable;
-import hash.table.DoubleHashingHashTable;
 
 public class test2 {
 	public static void main(String[] args) {
