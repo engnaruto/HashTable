@@ -143,7 +143,7 @@ public class PseudoRandomProbingHashTable<K, V> implements HashTable<K, V> {
 
 	@Override
 	public boolean isEmpty() {
-		return size != 0;
+		return size == 0;
 	}
 
 	// return size of the table.
