@@ -12,6 +12,7 @@ public class BucketingHashTable<K, V> implements HashTable<K, V> {
 	private int size;
 	private int bucketSize;
 	private int numOfBuckets;
+	public int collision;
 
 	@SuppressWarnings("unchecked")
 	public BucketingHashTable() {
@@ -22,6 +23,7 @@ public class BucketingHashTable<K, V> implements HashTable<K, V> {
 		bucketSize = 5;
 		numOfBuckets = mapLength / bucketSize;
 		buckets = new int[numOfBuckets];
+		collision = 0;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -50,9 +52,9 @@ public class BucketingHashTable<K, V> implements HashTable<K, V> {
 		size = temp.size;
 		bucketSize = temp.bucketSize;
 		numOfBuckets = temp.numOfBuckets;
-		System.out.println("Rehashing : Size = " + size + " mapLength = "
-				+ mapLength);
-//		keys = keys();
+//		System.out.println("Rehashing : Size = " + size + " mapLength = "
+//				+ mapLength);
+		// keys = keys();
 	}
 
 	// put key­value pair into the table
@@ -83,6 +85,8 @@ public class BucketingHashTable<K, V> implements HashTable<K, V> {
 						map[i] = pair;
 						size++;
 						return;
+					} else {
+						collision++;
 					}
 				}
 				overflow.add(pair);
@@ -101,6 +105,8 @@ public class BucketingHashTable<K, V> implements HashTable<K, V> {
 				if (map[i].isDeleted()) {
 					map[i] = pair;
 					return;
+				} else {
+					collision++;
 				}
 			}
 			map[mapIndex * bucketSize + buckets[mapIndex]] = pair;
@@ -241,5 +247,10 @@ public class BucketingHashTable<K, V> implements HashTable<K, V> {
 
 	private int getHashCode(PairB<K, V> pair) {
 		return pair.hashCode() % numOfBuckets;
+	}
+
+	@Override
+	public String toString() {
+		return "\nNumber of Collsion = " + collision;
 	}
 }

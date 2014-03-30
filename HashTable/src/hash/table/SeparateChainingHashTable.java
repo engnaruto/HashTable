@@ -7,9 +7,9 @@ import pairs.Pair;
 public class SeparateChainingHashTable<K, V> implements HashTable<K, V> {
 
 	private ArrayList<Pair<K, V>>[] map;
-	// private ArrayList<Pair<K, V>>[] tempMap;
 	private int mapLength;
 	private int size;
+	public int collision;
 
 	@SuppressWarnings("unchecked")
 	public SeparateChainingHashTable() {
@@ -20,6 +20,7 @@ public class SeparateChainingHashTable<K, V> implements HashTable<K, V> {
 		for (int i = 0; i < mapLength; i++) {
 			map[i] = new ArrayList<Pair<K, V>>();
 		}
+		collision = 0;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -36,6 +37,10 @@ public class SeparateChainingHashTable<K, V> implements HashTable<K, V> {
 
 	@Override
 	public void put(K key, V value) {
+		double loadFactor = (double) size / (double) mapLength;
+		if (loadFactor >= 3) {
+			rehash();
+		}
 		Pair<K, V> pair = new Pair<K, V>(key, value);
 		int mapIndex = getHashCode(pair);
 		if (map[mapIndex].contains(pair)) {
@@ -44,9 +49,8 @@ public class SeparateChainingHashTable<K, V> implements HashTable<K, V> {
 		} else {
 			map[mapIndex].add(pair);
 			size++;
-			double loadFactor = (double) size / (double) mapLength;
-			if (loadFactor >= 3) {
-				rehash();
+			if (map[mapIndex].size() > 1) {
+				collision++;
 			}
 		}
 	}
@@ -62,8 +66,8 @@ public class SeparateChainingHashTable<K, V> implements HashTable<K, V> {
 		map = temp.map;
 		size = temp.size;
 		mapLength = temp.mapLength;
-		System.out.println("Rehashing : Size = " + size + " mapLength = "
-				+ mapLength);
+		// System.out.println("Rehashing : Size = " + size + " mapLength = "
+		// + mapLength);
 		keys = keys();
 	}
 
@@ -135,6 +139,10 @@ public class SeparateChainingHashTable<K, V> implements HashTable<K, V> {
 		return pair.hashCode() % mapLength;
 	}
 
+	@Override
+	public String toString() {
+		return "\nNumber of Collsion = " + collision;
+	}
 	// private int getNewHashCode(Pair<?, ?> pair) {
 	// return pair.hashCode() % mapLength * 2;
 	// }

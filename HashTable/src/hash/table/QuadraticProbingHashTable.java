@@ -8,12 +8,14 @@ public class QuadraticProbingHashTable<K, V> implements HashTable<K, V> {
 	private PairB<K, V> map[];
 	private int mapLength;
 	private int size;
+	public int collision;
 
 	@SuppressWarnings("unchecked")
 	public QuadraticProbingHashTable() {
 		mapLength = 128;
 		size = 0;
 		map = new PairB[mapLength];
+		collision = 0;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -34,8 +36,8 @@ public class QuadraticProbingHashTable<K, V> implements HashTable<K, V> {
 		map = temp.map;
 		size = temp.size;
 		mapLength = temp.mapLength;
-		System.out.println("Rehashing : Size = " + size + " mapLength = "
-				+ mapLength);
+		// System.out.println("Rehashing : Size = " + size + " mapLength = "
+		// + mapLength);
 		// keys = keys();
 	}
 
@@ -49,13 +51,10 @@ public class QuadraticProbingHashTable<K, V> implements HashTable<K, V> {
 		}
 		PairB<K, V> pair = new PairB<K, V>(key, value);
 		int home = getHashCode(pair);
-
 		for (int i = 0; i < mapLength; i++) {
 			int index = getNextProbe(home, i);
 			if (map[index] == null) {
-				map[index] = pair;
-				size++;
-				return;
+				break;
 			} else if (map[index].equals(pair)) {
 				map[index] = pair;
 				return;
@@ -63,13 +62,14 @@ public class QuadraticProbingHashTable<K, V> implements HashTable<K, V> {
 		}
 		for (int i = 0; i < mapLength; i++) {
 			int index = getNextProbe(home, i);
-			if (map[index] != null && map[index].isDeleted()) {
+			if (map[index] == null || map[index].isDeleted()) {
 				map[index] = pair;
 				size++;
 				return;
+			} else {
+				collision++;
 			}
 		}
-		System.out.println("HashTable is Full!!!");
 	}
 
 	// get value paired with key, return null if
@@ -159,5 +159,10 @@ public class QuadraticProbingHashTable<K, V> implements HashTable<K, V> {
 
 	private int getNextProbe(int home, int i) {
 		return (home + (((i * i) + i) / 2)) % mapLength;
+	}
+
+	@Override
+	public String toString() {
+		return "\nNumber of Collsion = " + collision;
 	}
 }
