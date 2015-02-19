@@ -1,4 +1,4 @@
 HashTable
 =========
 
-Different Implementations for HashTable
+Different Implementations for HashTable.
